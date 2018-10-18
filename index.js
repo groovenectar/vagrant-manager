@@ -11,6 +11,7 @@ const trayWait = 'assets/logo/trayIconWait.png'
 
 let tray = null
 let aboutUs = null
+let homeDir = null
 
 app.on('ready', () => 
 {
@@ -38,18 +39,20 @@ app.on('ready', () =>
 		var getFile = exec('cd ~ && pwd', {silent:true,async:true})
 		getFile.stdout.on('data', function(data) 
 		{
+			homeDir = data.trim();
 			var box = []
-			fs.readFile(data.trim()+'/.vagrant.d/data/machine-index/index', 'utf8', function (err, data) 
+			fs.readFile(homeDir+'/.vagrant.d/data/machine-index/index', 'utf8', function (err, data) 
 			{
 				if (err) throw err
 				var jsonData = JSON.parse(data)
 				for(var index in jsonData.machines) {
 
 					box.push({
-						'path' 		: jsonData.machines[index]['vagrantfile_path'],
-						'state' 	: jsonData.machines[index]['state'],
-						'name' 		: jsonData.machines[index]['extra_data']['box']['name'],
-						'provider'	: jsonData.machines[index]['extra_data']['box']['provider'],
+						'name'      : jsonData.machines[index]['name'],
+						'path'      : jsonData.machines[index]['vagrantfile_path'],
+						'state'     : jsonData.machines[index]['state'],
+						'boxName'   : jsonData.machines[index]['extra_data']['box']['name'],
+						'provider'  : jsonData.machines[index]['extra_data']['box']['provider'],
 					})
 				}
 
@@ -77,9 +80,16 @@ app.on('ready', () =>
 			}]
 			
 			for(var index in box) {
+				var path = box[index]['path'].replace(new RegExp('^' + homeDir + '/?'), '~/');
+				var label = box[index]['name'];
+
+				if (!label || label === 'default') {
+					label = path;
+				}
+
 				menu.push(
 				{	
-					label: box[index]['name'],
+					label: label,
 					icon: __dirname+"/assets/logo/"+box[index]['state']+".png",
 					submenu: [
 					{
@@ -149,6 +159,14 @@ app.on('ready', () =>
 					},
 					{
 						type: "separator"
+					},
+					{
+						label : "Path: "+path,
+						enabled: false
+					},
+					{
+						label : "Box: "+box[index]['boxName'],
+						enabled: false
 					},
 					{
 						label : "Provider: "+box[index]['provider'],
