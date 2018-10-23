@@ -94,68 +94,48 @@ app.on('ready', () =>
 					submenu: [
 					{
 						label: "Vagrant Up",
-						submenu: [
+						sublabel: index,
+						id: box[index]['path'],
+						click: function(menuItem) 
 						{
-							label: "Up",
-							sublabel: index,
-							id: box[index]['path'],
-							click: function(menuItem) 
-							{
-								runShell(contextMenu, menuItem, "vagrant up")
-							}
-						}]
+							runShell(contextMenu, menuItem, "vagrant up")
+						}
 					},
 					{
 						label: "Vagrant Suspend",
-						submenu: [
+						sublabel: index,
+						id: box[index]['path'],
+						click: function(menuItem) 
 						{
-							label: "Suspend",
-							sublabel: index,
-							id: box[index]['path'],
-							click: function(menuItem) 
-							{
-								runShell(contextMenu, menuItem, "vagrant suspend")
-							}
-						}]
+							runShell(contextMenu, menuItem, "vagrant suspend")
+						}
 					},
 					{
 						label: "Vagrant Resume",
-						submenu: [
+						sublabel: index,
+						id: box[index]['path'],
+						click: function(menuItem) 
 						{
-							label: "Resume",
-							sublabel: index,
-							id: box[index]['path'],
-							click: function(menuItem) 
-							{
-								runShell(contextMenu, menuItem, "vagrant resume")
-							}
-						}]
+							runShell(contextMenu, menuItem, "vagrant resume")
+						}
 					},
 					{
 						label: "Vagrant Halt",
-						submenu: [
+						sublabel: index,
+						id: box[index]['path'],
+						click: function(menuItem) 
 						{
-							label: "Halt",
-							sublabel: index,
-							id: box[index]['path'],
-							click: function(menuItem) 
-							{
-								runShell(contextMenu, menuItem, "vagrant halt")								
-							}
-						}]
+							runShell(contextMenu, menuItem, "vagrant halt")								
+						}
 					},
 					{
 						label: "Vagrant Destroy",
-						submenu: [
+						sublabel: index,
+						id: box[index]['path'],
+						click: function(menuItem) 
 						{
-							label: "Destroy",
-							sublabel: index,
-							id: box[index]['path'],
-							click: function(menuItem) 
-							{
-								runShell(contextMenu, menuItem, "vagrant destroy")
-							}
-						}]
+							runShell(contextMenu, menuItem, "vagrant destroy")
+						}
 					},
 					{
 						type: "separator"
