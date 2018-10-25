@@ -141,6 +141,19 @@ app.on('ready', () =>
 						type: "separator"
 					},
 					{
+						label: "Open Vagrantfile",
+						sublabel: index,
+						id: box[index]['path'],
+						click: function(menuItem) 
+						{
+							console.log("xdg-open '" + box[index]['path'] + "/Vagrantfile'");
+							runShell(contextMenu, menuItem, "xdg-open '" + box[index]['path'] + "/Vagrantfile'")
+						}
+					},
+					{
+						type: "separator"
+					},
+					{
 						label : "Path: "+path,
 						enabled: false
 					},
