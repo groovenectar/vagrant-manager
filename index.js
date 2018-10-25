@@ -98,7 +98,7 @@ app.on('ready', () =>
 						id: box[index]['path'],
 						click: function(menuItem) 
 						{
-							runShell(contextMenu, menuItem, "vagrant up")
+							runVagrantCommand(contextMenu, menuItem, "vagrant up")
 						}
 					},
 					{
@@ -107,7 +107,7 @@ app.on('ready', () =>
 						id: box[index]['path'],
 						click: function(menuItem) 
 						{
-							runShell(contextMenu, menuItem, "vagrant suspend")
+							runVagrantCommand(contextMenu, menuItem, "vagrant suspend")
 						}
 					},
 					{
@@ -116,7 +116,7 @@ app.on('ready', () =>
 						id: box[index]['path'],
 						click: function(menuItem) 
 						{
-							runShell(contextMenu, menuItem, "vagrant resume")
+							runVagrantCommand(contextMenu, menuItem, "vagrant resume")
 						}
 					},
 					{
@@ -125,7 +125,7 @@ app.on('ready', () =>
 						id: box[index]['path'],
 						click: function(menuItem) 
 						{
-							runShell(contextMenu, menuItem, "vagrant halt")								
+							runVagrantCommand(contextMenu, menuItem, "vagrant halt")								
 						}
 					},
 					{
@@ -134,7 +134,7 @@ app.on('ready', () =>
 						id: box[index]['path'],
 						click: function(menuItem) 
 						{
-							runShell(contextMenu, menuItem, "vagrant destroy")
+							runVagrantCommand(contextMenu, menuItem, "vagrant destroy")
 						}
 					},
 					{
@@ -146,8 +146,7 @@ app.on('ready', () =>
 						id: box[index]['path'],
 						click: function(menuItem) 
 						{
-							console.log("xdg-open '" + box[index]['path'] + "/Vagrantfile'");
-							runShell(contextMenu, menuItem, "xdg-open '" + box[index]['path'] + "/Vagrantfile'")
+							runShell("xdg-open '" + menuItem['id'] + "/Vagrantfile'")
 						}
 					},
 					{
@@ -201,7 +200,19 @@ app.on('ready', () =>
 		})
 	}
 
-	let runShell = function(contextMenu, menuItem, command)
+	let runShell = function(command)
+	{
+		let shellCommand = new exec(command, function(code, stdout, stderr)
+		{
+			console.log('Exit code:', code);
+			console.log('Program output:', stdout);
+			console.log('Program stderr:', stderr);
+
+			vagrantManager();
+		});
+	};
+
+	let runVagrantCommand = function(contextMenu, menuItem, command)
 	{
 		tray.setImage(path.join(__dirname, trayWait))
 		contextMenu.items[0].enabled = false
@@ -209,17 +220,9 @@ app.on('ready', () =>
 		contextMenu.items[parentID].enabled = false
 		tray.setContextMenu(contextMenu)
 		
-		let shellCommand = new exec('cd ' + menuItem.id + ' && '+ command, function(code, stdout, stderr)
-		{
-			console.log('Exit code:', code)
-			console.log('Program output:', stdout)
-			console.log('Program stderr:', stderr)
-
-			vagrantManager()
-		})
-	}
+		runShell('cd ' + menuItem.id + ' && '+ command);
+	};
 
 	// Run
 	vagrantManager()
-
-})
+});
